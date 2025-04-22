@@ -27,6 +27,7 @@ export default defineConfig(({ mode }) => {
     },
     // 开发环境服务器配置
     server: {
+      hmr: true,  // 配置自动刷新
       // 是否监听所有地址
       host: true,
       // 端口号
@@ -37,8 +38,9 @@ export default defineConfig(({ mode }) => {
       open: true,
       // 反向代理
       proxy: {
-        "/api/v1": {
-          target: "https://apifoxmock.com/m1/2930465-2145633-default",
+        "/Api": {
+          target: "http://121.42.175.177:8090/",
+          // target: "https://apifoxmock.com/m1/2930465-2145633-default",
           // 是否为 WebSocket
           ws: false,
           // 是否允许跨域

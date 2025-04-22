@@ -30,6 +30,7 @@ function createInstance() {
       const responseType = response.request?.responseType
       if (responseType === "blob" || responseType === "arraybuffer") return apiData
       // 这个 code 是和后端约定的业务 code
+      console.log('apiData', apiData);
       const code = apiData.code
       // 如果没有 code, 代表这不是项目后端开发的 api
       if (code === undefined) {
@@ -37,7 +38,7 @@ function createInstance() {
         return Promise.reject(new Error("非本系统的接口"))
       }
       switch (code) {
-        case 0:
+        case 200:
           // 本系统采用 code === 0 来表示没有业务错误
           return apiData
         case 401:
@@ -108,13 +109,13 @@ function createRequest(instance: AxiosInstance) {
       // 请求头
       headers: {
         // 携带 Token
-        "Authorization": token ? `Bearer ${token}` : undefined,
+        "Token": token ? `${token}` : undefined,
         "Content-Type": "application/json"
       },
       // 请求体
       data: {},
       // 请求超时
-      timeout: 5000,
+      timeout: 1000 * 120,
       // 跨域请求时是否携带 Cookies
       withCredentials: false
     }

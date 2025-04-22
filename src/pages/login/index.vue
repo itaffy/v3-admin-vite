@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from "element-plus"
-import type { LoginRequestData } from "./apis/type"
+import type { LoginRequestData, LoginResult } from "./apis/type"
 import { useSettingsStore } from "@/pinia/stores/settings"
 import { useUserStore } from "@/pinia/stores/user"
 import ThemeSwitch from "@@/components/ThemeSwitch/index.vue"
@@ -28,9 +28,9 @@ const codeUrl = ref("")
 
 /** 登录表单数据 */
 const loginFormData: LoginRequestData = reactive({
-  username: "admin",
-  password: "12345678",
-  code: ""
+  userName: "13753214012",
+  password: "123456",
+  // code: ""
 })
 
 /** 登录表单校验规则 */
@@ -40,11 +40,11 @@ const loginFormRules: FormRules = {
   ],
   password: [
     { required: true, message: "请输入密码", trigger: "blur" },
-    { min: 8, max: 16, message: "长度在 8 到 16 个字符", trigger: "blur" }
+    { min: 6, max: 16, message: "长度在 8 到 16 个字符", trigger: "blur" }
   ],
-  code: [
-    { required: true, message: "请输入验证码", trigger: "blur" }
-  ]
+  // code: [
+  //   { required: true, message: "请输入验证码", trigger: "blur" }
+  // ]
 }
 
 /** 登录 */
@@ -56,10 +56,11 @@ function handleLogin() {
     }
     loading.value = true
     loginApi(loginFormData).then(({ data }) => {
-      userStore.setToken(data.token)
+      console.log('login api data', data);
+      userStore.setToken(data.Token)
       router.push("/")
     }).catch(() => {
-      createCode()
+      // createCode()
       loginFormData.password = ""
     }).finally(() => {
       loading.value = false
@@ -80,7 +81,7 @@ function createCode() {
 }
 
 // 初始化验证码
-createCode()
+// createCode()
 </script>
 
 <template>
@@ -89,13 +90,13 @@ createCode()
     <Owl :close-eyes="isFocus" />
     <div class="login-card">
       <div class="title">
-        <img src="@@/assets/images/layouts/logo-text-2.png">
+        <img src="@@/assets/images/layouts/logo-login.png">
       </div>
       <div class="content">
         <el-form ref="loginFormRef" :model="loginFormData" :rules="loginFormRules" @keyup.enter="handleLogin">
-          <el-form-item prop="username">
+          <el-form-item prop="userName">
             <el-input
-              v-model.trim="loginFormData.username"
+              v-model.trim="loginFormData.userName"
               placeholder="用户名"
               type="text"
               tabindex="1"
@@ -116,7 +117,8 @@ createCode()
               @focus="handleFocus"
             />
           </el-form-item>
-          <el-form-item prop="code">
+          <!-- 验证码 -->
+          <!-- <el-form-item prop="code">
             <el-input
               v-model.trim="loginFormData.code"
               placeholder="验证码"
@@ -143,7 +145,7 @@ createCode()
                 </el-image>
               </template>
             </el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-button :loading="loading" type="primary" size="large" @click.prevent="handleLogin">
             登 录
           </el-button>
@@ -178,13 +180,14 @@ createCode()
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 150px;
+      height: 100px;
       img {
-        height: 100%;
+        width: 172px;
+        height: 32px;
       }
     }
     .content {
-      padding: 20px 50px 50px 50px;
+      padding: 10px 50px 50px 50px;
       :deep(.el-input-group__append) {
         padding: 0;
         overflow: hidden;
